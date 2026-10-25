@@ -1,0 +1,760 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sca-physics:metadata:1.1",
+  "title": "sca_physics complete persisted metadata version 1.1, optional mechanical fields",
+  "description": "Stored in root definition metadata.sca_physics, not an SCA native contract. Package reference coverage, pair identity and finite numeric checks additionally require validate_config. Optional mechanical fields do not supply numeric defaults. Float32 representability, rest/contact ordering and native body compatibility additionally require runtime validation/export.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "default_profile",
+    "scene",
+    "parts",
+    "joints",
+    "assembly"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.1"
+    },
+    "default_profile": {
+      "const": "demo-v1"
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "up_axis"
+      ],
+      "properties": {
+        "up_axis": {
+          "$ref": "#/$defs/upAxis"
+        }
+      }
+    },
+    "parts": {
+      "type": "object",
+      "propertyNames": {
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/part"
+      }
+    },
+    "joints": {
+      "type": "object",
+      "propertyNames": {
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/joint"
+      }
+    },
+    "assembly": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collision_exclusions"
+      ],
+      "properties": {
+        "collision_exclusions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/exclusion"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "detail"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "explicit",
+            "reference",
+            "estimated",
+            "default"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "citation": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "conditions": {
+          "type": "string",
+          "pattern": "\\S"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "reference"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "citation",
+              "conditions"
+            ]
+          }
+        }
+      ]
+    },
+    "friction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "1"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "restitution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "const": "1"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "enabled": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "unit": {
+          "const": "boolean"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "approximation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "none",
+            "convexHull",
+            "convexDecomposition",
+            "boundingCube",
+            "boundingSphere"
+          ]
+        },
+        "unit": {
+          "const": "token"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "upAxis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "+Y",
+            "+Z"
+          ]
+        },
+        "unit": {
+          "const": "axis"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "revoluteDamping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "N*m*s/rad"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "prismaticDamping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "N*s/m"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "unsupportedDamping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "const": 0
+        },
+        "unit": {
+          "const": "unsupported"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definition_id",
+        "contact",
+        "collision"
+      ],
+      "properties": {
+        "definition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "static_friction",
+            "dynamic_friction",
+            "restitution"
+          ],
+          "properties": {
+            "static_friction": {
+              "$ref": "#/$defs/friction"
+            },
+            "dynamic_friction": {
+              "$ref": "#/$defs/friction"
+            },
+            "restitution": {
+              "$ref": "#/$defs/restitution"
+            },
+            "friction_combine_mode": {
+              "$ref": "#/$defs/combineMode"
+            },
+            "restitution_combine_mode": {
+              "$ref": "#/$defs/combineMode"
+            }
+          }
+        },
+        "collision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "approximation_dynamic",
+            "approximation_static"
+          ],
+          "properties": {
+            "enabled": {
+              "$ref": "#/$defs/enabled"
+            },
+            "approximation_dynamic": {
+              "$ref": "#/$defs/approximation"
+            },
+            "approximation_static": {
+              "$ref": "#/$defs/approximation"
+            },
+            "contact_offset": {
+              "$ref": "#/$defs/contactOffset"
+            },
+            "rest_offset": {
+              "$ref": "#/$defs/restOffset"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "rest_offset"
+                ],
+                "properties": {
+                  "rest_offset": {
+                    "required": [
+                      "value"
+                    ],
+                    "properties": {
+                      "value": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "contact_offset"
+                ],
+                "properties": {
+                  "contact_offset": {
+                    "$ref": "#/$defs/contactOffsetExplicit"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "rigid_body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "$ref": "#/$defs/rigidMode"
+            },
+            "gravity_enabled": {
+              "$ref": "#/$defs/mechanicalEnabled"
+            },
+            "linear_damping": {
+              "$ref": "#/$defs/mechanicalDamping"
+            },
+            "angular_damping": {
+              "$ref": "#/$defs/mechanicalDamping"
+            }
+          }
+        }
+      }
+    },
+    "joint": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "joint_type",
+            "damping",
+            "collision_enabled"
+          ],
+          "properties": {
+            "joint_type": {
+              "const": "revolute"
+            },
+            "damping": {
+              "$ref": "#/$defs/revoluteDamping"
+            },
+            "collision_enabled": {
+              "$ref": "#/$defs/enabled"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "joint_type",
+            "damping",
+            "collision_enabled"
+          ],
+          "properties": {
+            "joint_type": {
+              "const": "prismatic"
+            },
+            "damping": {
+              "$ref": "#/$defs/prismaticDamping"
+            },
+            "collision_enabled": {
+              "$ref": "#/$defs/enabled"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "joint_type",
+            "damping",
+            "collision_enabled"
+          ],
+          "properties": {
+            "joint_type": {
+              "type": "string",
+              "minLength": 1,
+              "not": {
+                "enum": [
+                  "revolute",
+                  "prismatic"
+                ]
+              }
+            },
+            "damping": {
+              "$ref": "#/$defs/unsupportedDamping"
+            },
+            "collision_enabled": {
+              "$ref": "#/$defs/enabled"
+            }
+          }
+        }
+      ]
+    },
+    "exclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a",
+        "b",
+        "source"
+      ],
+      "properties": {
+        "a": {
+          "type": "string",
+          "minLength": 1
+        },
+        "b": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "mechanicalEnabled": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "unit": {
+              "const": "boolean"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "boolean"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "mechanicalDamping": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 3.4028234663852886e+38
+            },
+            "unit": {
+              "const": "1/s"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "1/s"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "contactOffsetExplicit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 3.4028234663852886e+38
+        },
+        "unit": {
+          "const": "m"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "contactOffset": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/contactOffsetExplicit"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "m"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "restOffset": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": -3.4028234663852886e+38,
+              "maximum": 3.4028234663852886e+38
+            },
+            "unit": {
+              "const": "m"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "m"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "combineMode": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "average",
+                "min",
+                "multiply",
+                "max"
+              ]
+            },
+            "unit": {
+              "const": "token"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "token"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "rigidMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "static",
+            "dynamic",
+            "kinematic"
+          ]
+        },
+        "unit": {
+          "const": "token"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    }
+  }
+}

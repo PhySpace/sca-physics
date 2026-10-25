@@ -1,0 +1,677 @@
+{
+  "schema_version": "1.1",
+  "parts": {
+    "node/mechanical_acceptance/anchor": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "static",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.23,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.17,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.04,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "mode": "engine_default",
+          "unit": "token",
+          "source": {
+            "kind": "default",
+            "detail": "Explicitly retain PhysX 107.3.18 engine default; no authored value"
+          }
+        },
+        "restitution_combine_mode": {
+          "mode": "engine_default",
+          "unit": "token",
+          "source": {
+            "kind": "default",
+            "detail": "Explicitly retain PhysX 107.3.18 engine default; no authored value"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "mode": "engine_default",
+          "unit": "m",
+          "source": {
+            "kind": "default",
+            "detail": "Explicitly retain PhysX 107.3.18 engine default; no authored value"
+          }
+        },
+        "rest_offset": {
+          "mode": "engine_default",
+          "unit": "m",
+          "source": {
+            "kind": "default",
+            "detail": "Explicitly retain PhysX 107.3.18 engine default; no authored value"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/static": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "static",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.30000000000000004,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.22000000000000003,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.06,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "max",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.0008100000000000001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/dynamic": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "dynamic",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "gravity_enabled": {
+          "value": true,
+          "unit": "boolean",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.37,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.27,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.08,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "min",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.0008200000000000001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/kinematic": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "kinematic",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "gravity_enabled": {
+          "value": true,
+          "unit": "boolean",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "angular_damping": {
+          "mode": "engine_default",
+          "unit": "1/s",
+          "source": {
+            "kind": "default",
+            "detail": "Explicitly retain PhysX 107.3.18 engine default; no authored value"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.44000000000000006,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.32000000000000006,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.1,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "max",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.00083,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/gravity_off": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "dynamic",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "gravity_enabled": {
+          "value": false,
+          "unit": "boolean",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.51,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.37,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.12,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "min",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.00084,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/linear_damped": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "dynamic",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "gravity_enabled": {
+          "value": false,
+          "unit": "boolean",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "linear_damping": {
+          "value": 2.4,
+          "unit": "1/s",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.5800000000000001,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.42000000000000004,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.14,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "max",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.0008500000000000001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/angular_damped": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "dynamic",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "gravity_enabled": {
+          "value": false,
+          "unit": "boolean",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "angular_damping": {
+          "value": 1.8,
+          "unit": "1/s",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.65,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.4700000000000001,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.16,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "min",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.0008600000000000001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    },
+    "node/mechanical_acceptance/control": {
+      "definition_id": "mechanical_cube",
+      "rigid_body": {
+        "mode": {
+          "value": "dynamic",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "gravity_enabled": {
+          "value": false,
+          "unit": "boolean",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "linear_damping": {
+          "value": 0,
+          "unit": "1/s",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "angular_damping": {
+          "value": 0,
+          "unit": "1/s",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "contact": {
+        "static_friction": {
+          "value": 0.7200000000000001,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "dynamic_friction": {
+          "value": 0.52,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution": {
+          "value": 0.18000000000000002,
+          "unit": "1",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "friction_combine_mode": {
+          "value": "multiply",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "restitution_combine_mode": {
+          "value": "max",
+          "unit": "token",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      },
+      "collision": {
+        "contact_offset": {
+          "value": 0.00087,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        },
+        "rest_offset": {
+          "value": -0.0001,
+          "unit": "m",
+          "source": {
+            "kind": "explicit",
+            "detail": "Artificial acceptance value, not measured material data"
+          }
+        }
+      }
+    }
+  }
+}

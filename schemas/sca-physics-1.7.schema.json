@@ -1,0 +1,3363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sca-physics:metadata:1.7",
+  "title": "sca_physics complete persisted metadata 1.7: frozen cable resolution and scene resource budgets",
+  "description": "Strict persisted SI declarations. Runtime additionally verifies CAD bindings, relations, planarity, arc lengths, representation conflicts and endpoint identities. Declaration validation does not prove backend behavior.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "default_profile",
+    "scene",
+    "parts",
+    "joints",
+    "assembly",
+    "cables"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.7"
+    },
+    "default_profile": {
+      "const": "demo-v1"
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "up_axis"
+      ],
+      "properties": {
+        "up_axis": {
+          "$ref": "#/$defs/upAxis"
+        }
+      }
+    },
+    "parts": {
+      "type": "object",
+      "propertyNames": {
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/part"
+      }
+    },
+    "joints": {
+      "type": "object",
+      "propertyNames": {
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/joint"
+      }
+    },
+    "assembly": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collision_exclusions"
+      ],
+      "properties": {
+        "collision_exclusions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/exclusion"
+          }
+        }
+      }
+    },
+    "cables": {
+      "type": "object",
+      "propertyNames": {
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/nativeCable"
+          },
+          {
+            "$ref": "#/$defs/rigidJointChain"
+          }
+        ]
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose",
+        "representation",
+        "rationale"
+      ],
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "representation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "field",
+              "material_id",
+              "basis"
+            ],
+            "properties": {
+              "field": {
+                "type": "string",
+                "minLength": 1
+              },
+              "material_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "basis": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "detail"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "explicit",
+            "reference",
+            "estimated",
+            "default",
+            "derived"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "citation": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "conditions": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "reference"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "citation",
+              "conditions"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "derived"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "derivation"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "derivation"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "friction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "1"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "restitution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "const": "1"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "enabled": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "unit": {
+          "const": "boolean"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "approximation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "none",
+            "convexHull",
+            "convexDecomposition",
+            "boundingCube",
+            "boundingSphere"
+          ]
+        },
+        "unit": {
+          "const": "token"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "upAxis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "+Y",
+            "+Z"
+          ]
+        },
+        "unit": {
+          "const": "axis"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "revoluteDamping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "N*m*s/rad"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "prismaticDamping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "N*s/m"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "unsupportedDamping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "const": 0
+        },
+        "unit": {
+          "const": "unsupported"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definition_id",
+        "contact",
+        "collision"
+      ],
+      "properties": {
+        "definition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "static_friction",
+            "dynamic_friction",
+            "restitution"
+          ],
+          "properties": {
+            "static_friction": {
+              "$ref": "#/$defs/friction"
+            },
+            "dynamic_friction": {
+              "$ref": "#/$defs/friction"
+            },
+            "restitution": {
+              "$ref": "#/$defs/restitution"
+            },
+            "friction_combine_mode": {
+              "$ref": "#/$defs/combineMode"
+            },
+            "restitution_combine_mode": {
+              "$ref": "#/$defs/combineMode"
+            }
+          }
+        },
+        "collision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "approximation_dynamic",
+            "approximation_static"
+          ],
+          "properties": {
+            "enabled": {
+              "$ref": "#/$defs/enabled"
+            },
+            "approximation_dynamic": {
+              "$ref": "#/$defs/approximation"
+            },
+            "approximation_static": {
+              "$ref": "#/$defs/approximation"
+            },
+            "contact_offset": {
+              "$ref": "#/$defs/contactOffset"
+            },
+            "rest_offset": {
+              "$ref": "#/$defs/restOffset"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "rest_offset"
+                ],
+                "properties": {
+                  "rest_offset": {
+                    "required": [
+                      "value"
+                    ],
+                    "properties": {
+                      "value": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "contact_offset"
+                ],
+                "properties": {
+                  "contact_offset": {
+                    "$ref": "#/$defs/contactOffsetExplicit"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "rigid_body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "$ref": "#/$defs/rigidMode"
+            },
+            "gravity_enabled": {
+              "$ref": "#/$defs/mechanicalEnabled"
+            },
+            "linear_damping": {
+              "$ref": "#/$defs/mechanicalDamping"
+            },
+            "angular_damping": {
+              "$ref": "#/$defs/mechanicalDamping"
+            }
+          }
+        },
+        "physical_type": {
+          "enum": [
+            "deformable_volume",
+            "rigid_joint_chain"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "physical_type"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "rigid_body"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "joint": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "joint_type",
+            "damping",
+            "collision_enabled"
+          ],
+          "properties": {
+            "joint_type": {
+              "const": "revolute"
+            },
+            "damping": {
+              "$ref": "#/$defs/revoluteDamping"
+            },
+            "collision_enabled": {
+              "$ref": "#/$defs/enabled"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "joint_type",
+            "damping",
+            "collision_enabled"
+          ],
+          "properties": {
+            "joint_type": {
+              "const": "prismatic"
+            },
+            "damping": {
+              "$ref": "#/$defs/prismaticDamping"
+            },
+            "collision_enabled": {
+              "$ref": "#/$defs/enabled"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "joint_type",
+            "damping",
+            "collision_enabled"
+          ],
+          "properties": {
+            "joint_type": {
+              "type": "string",
+              "minLength": 1,
+              "not": {
+                "enum": [
+                  "revolute",
+                  "prismatic"
+                ]
+              }
+            },
+            "damping": {
+              "$ref": "#/$defs/unsupportedDamping"
+            },
+            "collision_enabled": {
+              "$ref": "#/$defs/enabled"
+            }
+          }
+        }
+      ]
+    },
+    "exclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a",
+        "b",
+        "source"
+      ],
+      "properties": {
+        "a": {
+          "type": "string",
+          "minLength": 1
+        },
+        "b": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "mechanicalEnabled": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "unit": {
+              "const": "boolean"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "boolean"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "mechanicalDamping": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 3.4028234663852886e+38
+            },
+            "unit": {
+              "const": "1/s"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "1/s"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "contactOffsetExplicit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 3.4028234663852886e+38
+        },
+        "unit": {
+          "const": "m"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "contactOffset": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/contactOffsetExplicit"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "m"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "restOffset": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": -3.4028234663852886e+38,
+              "maximum": 3.4028234663852886e+38
+            },
+            "unit": {
+              "const": "m"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "m"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "combineMode": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "average",
+                "min",
+                "multiply",
+                "max"
+              ]
+            },
+            "unit": {
+              "const": "token"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "source"
+          ],
+          "properties": {
+            "mode": {
+              "const": "engine_default"
+            },
+            "unit": {
+              "const": "token"
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      ]
+    },
+    "rigidMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "static",
+            "dynamic",
+            "kinematic"
+          ]
+        },
+        "unit": {
+          "const": "token"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "nativeCable": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parent_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "representation": {
+          "const": "physx_deformable_volume"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "geometry": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "length": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "diameter": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "centerline": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "minItems": 2,
+                  "items": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "endpoint_tangents": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          },
+          "required": [
+            "length",
+            "diameter",
+            "centerline"
+          ]
+        },
+        "simulation_mesh": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "method": {
+                  "const": "swept_tetrahedra"
+                },
+                "axial_segments": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4096
+                    },
+                    "unit": {
+                      "const": "count"
+                    },
+                    "source": {
+                      "$ref": "#/$defs/source"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "unit",
+                    "source"
+                  ]
+                },
+                "radial_segments": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "minimum": 3,
+                      "maximum": 128
+                    },
+                    "unit": {
+                      "const": "count"
+                    },
+                    "source": {
+                      "$ref": "#/$defs/source"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "unit",
+                    "source"
+                  ]
+                }
+              },
+              "required": [
+                "method",
+                "axial_segments",
+                "radial_segments"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "method": {
+                  "const": "physx_conforming_tetrahedra"
+                },
+                "axial_segments": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4096
+                    },
+                    "unit": {
+                      "const": "count"
+                    },
+                    "source": {
+                      "$ref": "#/$defs/source"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "unit",
+                    "source"
+                  ]
+                },
+                "radial_segments": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "minimum": 3,
+                      "maximum": 128
+                    },
+                    "unit": {
+                      "const": "count"
+                    },
+                    "source": {
+                      "$ref": "#/$defs/source"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "unit",
+                    "source"
+                  ]
+                },
+                "filter_length": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "unit": {
+                      "const": "m"
+                    },
+                    "source": {
+                      "$ref": "#/$defs/source"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "unit",
+                    "source"
+                  ]
+                },
+                "generated": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "points",
+                    "tets",
+                    "surface",
+                    "ends",
+                    "provenance",
+                    "reference_points"
+                  ],
+                  "properties": {
+                    "points": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "reference_points": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "tets": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "surface": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "ends": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "start",
+                        "end"
+                      ],
+                      "properties": {
+                        "start": {
+                          "type": "array",
+                          "minItems": 3,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "end": {
+                          "type": "array",
+                          "minItems": 3,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        }
+                      }
+                    },
+                    "provenance": {
+                      "type": "object",
+                      "required": [
+                        "method",
+                        "api"
+                      ],
+                      "properties": {
+                        "method": {
+                          "const": "physx_conforming_tetrahedra"
+                        },
+                        "api": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "centerline_embedding": {},
+                    "source_geometry_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "mesh_cache_key": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "mesh_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                },
+                "generation_config": {
+                  "type": "object",
+                  "required": [
+                    "reference_geometry"
+                  ],
+                  "properties": {
+                    "reference_geometry": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "cache_key": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "method",
+                "axial_segments",
+                "radial_segments",
+                "filter_length",
+                "generated"
+              ]
+            }
+          ]
+        },
+        "material": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "density": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "kg/m^3"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "youngs_modulus": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "Pa"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "poissons_ratio": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMaximum": 0.5
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "dynamic_friction": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "elasticity_damping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            }
+          },
+          "required": [
+            "density",
+            "youngs_modulus",
+            "poissons_ratio"
+          ]
+        },
+        "deformable": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "gravity_enabled": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "self_collision": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "linear_damping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "solver_position_iterations": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 255
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "enable_speculative_ccd": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "sleep_threshold": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "m/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "settling_threshold": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "m/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "settling_damping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          },
+          "required": []
+        },
+        "collision": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "contact_offset": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "rest_offset": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ]
+            },
+            "attachment_filtering": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "enum": [
+                    "whole_body",
+                    "endpoint_elements"
+                  ]
+                },
+                "unit": {
+                  "const": "token"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          },
+          "required": [
+            "enabled",
+            "contact_offset",
+            "rest_offset"
+          ]
+        },
+        "attachments": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "endpoint": {
+                "enum": [
+                  "start",
+                  "end"
+                ]
+              },
+              "rigid_node_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "local_frame": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "position": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      "unit": {
+                        "const": "m"
+                      },
+                      "source": {
+                        "$ref": "#/$defs/source"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "unit",
+                      "source"
+                    ]
+                  },
+                  "quaternion_wxyz": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      "unit": {
+                        "const": "1"
+                      },
+                      "source": {
+                        "$ref": "#/$defs/source"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "unit",
+                      "source"
+                    ]
+                  }
+                },
+                "required": [
+                  "position",
+                  "quaternion_wxyz"
+                ]
+              },
+              "source": {
+                "$ref": "#/$defs/source"
+              }
+            },
+            "required": [
+              "endpoint",
+              "rigid_node_id",
+              "local_frame",
+              "source"
+            ]
+          }
+        },
+        "target_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "physical_type": {
+          "const": "deformable_volume"
+        },
+        "geometry_source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "target_node_id",
+            "definition_id",
+            "definition_content_hash",
+            "brep_sha256",
+            "native_length_unit",
+            "mesh_length_unit",
+            "world_transform_m",
+            "world_transform_sha256"
+          ],
+          "properties": {
+            "kind": {
+              "const": "cad_occurrence"
+            },
+            "target_node_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "definition_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "definition_content_hash": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "brep_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "native_length_unit": {
+              "const": "mm"
+            },
+            "mesh_length_unit": {
+              "const": "m"
+            },
+            "world_transform_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "world_transform_m": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "parent_node_id",
+        "representation",
+        "source",
+        "geometry",
+        "simulation_mesh",
+        "material",
+        "collision",
+        "attachments"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "target_node_id"
+            ]
+          },
+          "then": {
+            "required": [
+              "physical_type",
+              "geometry_source"
+            ],
+            "properties": {
+              "simulation_mesh": {
+                "required": [
+                  "generation_config",
+                  "cache_key"
+                ],
+                "properties": {
+                  "method": {
+                    "const": "physx_conforming_tetrahedra"
+                  },
+                  "generated": {
+                    "required": [
+                      "source_geometry_sha256",
+                      "mesh_cache_key",
+                      "mesh_sha256"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "rigidJointChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "representation",
+        "physical_type",
+        "target_node_id",
+        "parent_node_id",
+        "geometry_source",
+        "source",
+        "geometry",
+        "discretization",
+        "section",
+        "mechanics",
+        "limits",
+        "body",
+        "collision",
+        "contact",
+        "scene",
+        "endpoints"
+      ],
+      "properties": {
+        "representation": {
+          "const": "rigid_joint_chain"
+        },
+        "physical_type": {
+          "const": "rigid_joint_chain"
+        },
+        "target_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geometry_source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "target_node_id",
+            "definition_id",
+            "definition_content_hash",
+            "brep_sha256",
+            "native_length_unit",
+            "mesh_length_unit",
+            "world_transform_m",
+            "world_transform_sha256"
+          ],
+          "properties": {
+            "kind": {
+              "const": "cad_occurrence"
+            },
+            "target_node_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "definition_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "definition_content_hash": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "brep_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "native_length_unit": {
+              "const": "mm"
+            },
+            "mesh_length_unit": {
+              "const": "m"
+            },
+            "world_transform_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "world_transform_m": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "geometry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "coordinate_space",
+            "initial_shape",
+            "centerline",
+            "arc_stations",
+            "free_start",
+            "free_end",
+            "length"
+          ],
+          "properties": {
+            "coordinate_space": {
+              "const": "world"
+            },
+            "initial_shape": {
+              "const": "planar"
+            },
+            "centerline": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 100000,
+                  "items": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "arc_stations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 100000,
+                  "items": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "free_start": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "free_end": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "length": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "discretization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "frame_policy",
+            "free_segments"
+          ],
+          "properties": {
+            "frame_policy": {
+              "const": "shortest_arc_x"
+            },
+            "free_segments": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 2
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "section": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "shape",
+            "radius",
+            "endpoint_radius"
+          ],
+          "properties": {
+            "shape": {
+              "const": "circle"
+            },
+            "radius": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "endpoint_radius": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "mechanics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "damping_mode",
+            "rest_state",
+            "linear_density",
+            "bending_rigidity",
+            "torsional_rigidity",
+            "joint_damping"
+          ],
+          "properties": {
+            "damping_mode": {
+              "const": "per_joint"
+            },
+            "rest_state": {
+              "const": "straight"
+            },
+            "linear_density": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "kg/m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "bending_rigidity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "N*m^2"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "torsional_rigidity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "N*m^2"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "joint_damping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "N*m*s/rad"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minimum_bend_radius",
+            "maximum_bend_angle",
+            "maximum_twist_angle"
+          ],
+          "properties": {
+            "minimum_bend_radius": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "maximum_bend_angle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "exclusiveMaximum": 180
+                },
+                "unit": {
+                  "const": "deg"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "maximum_twist_angle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "exclusiveMaximum": 180
+                },
+                "unit": {
+                  "const": "deg"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "linear_damping",
+            "angular_damping",
+            "solver_position_iterations",
+            "solver_velocity_iterations",
+            "enable_speculative_ccd",
+            "apply_to_endpoints"
+          ],
+          "properties": {
+            "linear_damping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "angular_damping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1/s"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "solver_position_iterations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 255
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "solver_velocity_iterations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "enable_speculative_ccd": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "apply_to_endpoints": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "collision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "contact_offset",
+            "rest_offset",
+            "self_collision",
+            "filter_adjacent",
+            "filter_endpoint_links"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "contact_offset": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "rest_offset": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "const": "m"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "self_collision": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "filter_adjacent": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "const": true
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "filter_endpoint_links": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "filter_material_neighbors": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "const": "boolean"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "contact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "static_friction",
+            "dynamic_friction",
+            "restitution"
+          ],
+          "properties": {
+            "static_friction": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "dynamic_friction": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "restitution": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "scene": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "solver_type",
+            "enable_gpu_dynamics",
+            "broadphase_type",
+            "physics_hz",
+            "gravity_magnitude"
+          ],
+          "properties": {
+            "solver_type": {
+              "const": "TGS"
+            },
+            "enable_gpu_dynamics": {
+              "const": false
+            },
+            "broadphase_type": {
+              "const": "MBP"
+            },
+            "physics_hz": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16384
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            },
+            "gravity_magnitude": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "const": "m/s^2"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          }
+        },
+        "endpoints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "free",
+                        "world_fixed"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "mode",
+                    "rigid_node_id"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "body_fixed"
+                    },
+                    "rigid_node_id": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              ]
+            },
+            "end": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "free",
+                        "world_fixed"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "mode",
+                    "rigid_node_id"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "body_fixed"
+                    },
+                    "rigid_node_id": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "resource_budget": {
+          "$ref": "#/$defs/resourceBudget"
+        },
+        "resolution": {
+          "$ref": "#/$defs/cableResolution"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "anyOf": [
+              {
+                "required": [
+                  "resolution"
+                ]
+              },
+              {
+                "required": [
+                  "discretization"
+                ],
+                "properties": {
+                  "discretization": {
+                    "required": [
+                      "free_segments"
+                    ],
+                    "properties": {
+                      "free_segments": {
+                        "required": [
+                          "value"
+                        ],
+                        "properties": {
+                          "value": {
+                            "type": "integer",
+                            "exclusiveMinimum": 512
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "then": {
+            "required": [
+              "resource_budget"
+            ]
+          }
+        }
+      ]
+    },
+    "resourceBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_bodies",
+        "max_joints",
+        "max_colliders",
+        "max_filtered_pairs",
+        "max_contact_pairs",
+        "max_solver_work_per_second"
+      ],
+      "properties": {
+        "max_bodies": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          ]
+        },
+        "max_joints": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          ]
+        },
+        "max_colliders": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          ]
+        },
+        "max_filtered_pairs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          ]
+        },
+        "max_contact_pairs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          ]
+        },
+        "max_solver_work_per_second": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit",
+                "source"
+              ],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "source": {
+                  "$ref": "#/$defs/source"
+                }
+              }
+            }
+          ]
+        },
+        "scope": {
+          "const": "scene"
+        }
+      }
+    },
+    "cableResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_version",
+        "description",
+        "category",
+        "preset",
+        "request",
+        "geometry",
+        "parameter_sources",
+        "selection",
+        "solver",
+        "resource_check",
+        "validation",
+        "limitations",
+        "resolved_fingerprint",
+        "decision_fingerprint"
+      ],
+      "properties": {
+        "format_version": {
+          "const": "cable-resolution-1"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "reference_url",
+            "assumption"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reference_url": {
+              "type": "string",
+              "minLength": 1
+            },
+            "assumption": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "request": {
+          "type": "object"
+        },
+        "geometry": {
+          "type": "object"
+        },
+        "parameter_sources": {
+          "type": "object"
+        },
+        "selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "rule_version",
+            "quality",
+            "criteria",
+            "requested_segment_length_m",
+            "candidate_segment_length_m",
+            "free_segments",
+            "actual_material_segment_length_m",
+            "free_length_m",
+            "material_interval_count",
+            "minimum_initial_curve_radius_m"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "auto",
+                "explicit",
+                "target_length"
+              ]
+            },
+            "rule_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "quality": {
+              "enum": [
+                "preview",
+                "balanced",
+                "fine"
+              ]
+            },
+            "criteria": {
+              "type": "object"
+            },
+            "requested_segment_length_m": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "candidate_segment_length_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "free_segments": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "actual_material_segment_length_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "free_length_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "material_interval_count": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "minimum_initial_curve_radius_m": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "solver": {
+          "type": "object"
+        },
+        "resource_check": {
+          "type": "object"
+        },
+        "validation": {
+          "const": {
+            "configuration": "validated",
+            "native_runtime": "not_asserted_by_planner",
+            "physical_accuracy": "not_established"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resolved_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "decision_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule",
+        "formula",
+        "inputs"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inputs": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/calculationInput"
+          }
+        }
+      }
+    },
+    "calculationInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
+      "properties": {
+        "value": {},
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    }
+  }
+}

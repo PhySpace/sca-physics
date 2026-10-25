@@ -1,0 +1,17 @@
+__pycache__/
+__marimo__/
+*.pyc
+.pytest_cache/
+dist/
+*.egg-info/
+build/
+.venv/
+.venv-*/
+.mypy_cache/
+.ruff_cache/
+runtime/
+runtimes/
+logs/
+*.log
+*.whl
+# Preserve the small verification/*.scadpkg regression fixtures.

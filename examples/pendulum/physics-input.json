@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "default_profile": "demo-v1",
+  "scene": {"up_axis": {"value": "+Z", "unit": "axis", "source": {"kind": "explicit", "detail": "Test scenario uses the SCA default +Z; geometry coordinates are preserved"}}},
+  "parts": {
+    "node/passive_pendulum/base": {
+      "definition_id": "pendulum_base",
+      "contact": {
+        "static_friction": {"value": 0.65, "unit": "1", "source": {"kind": "explicit", "detail": "Artificial verification value, not measured material data"}},
+        "dynamic_friction": {"value": 0.5, "unit": "1", "source": {"kind": "explicit", "detail": "Artificial verification value, not measured material data"}},
+        "restitution": {"value": 0.2, "unit": "1", "source": {"kind": "explicit", "detail": "Artificial verification value, not measured material data"}}
+      }
+    },
+    "node/passive_pendulum/arm": {
+      "definition_id": "pendulum_arm",
+      "contact": {
+        "static_friction": {"value": 0.25, "unit": "1", "source": {"kind": "explicit", "detail": "Artificial verification value, not measured material data"}},
+        "dynamic_friction": {"value": 0.15, "unit": "1", "source": {"kind": "explicit", "detail": "Artificial verification value, not measured material data"}},
+        "restitution": {"value": 0.35, "unit": "1", "source": {"kind": "explicit", "detail": "Artificial verification value, not measured material data"}}
+      }
+    }
+  },
+  "joints": {
+    "joint/passive_pendulum/hinge": {
+      "joint_type": "revolute",
+      "damping": {"value": 0.0008, "unit": "N*m*s/rad", "source": {"kind": "explicit", "detail": "Artificial nonzero passive resistance for the verification scenario, not measured"}},
+      "collision_enabled": {"value": false, "unit": "boolean", "source": {"kind": "estimated", "detail": "Software fixture deliberately disables collision between the hinge bodies; not a measured property"}}
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[addon]
+name = "sca-physics"
+version = "0.1.8rc1"
+license = "Apache-2.0"
+skill_path = "skill"
+
+[compat]
+sca = ">=2.2.5,<2.2.6"
+
+[runtime]
+kind = "python-env"
+platforms = ["windows-x86_64"]
+command_prefix = "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command .('{addon_dir}/scripts/dispatch.ps1') -RuntimeDir '{runtime_dir}'"
+check_cmd = "check"

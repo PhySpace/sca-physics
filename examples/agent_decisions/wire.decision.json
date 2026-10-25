@@ -1,0 +1,117 @@
+{
+  "id": "A-wire",
+  "description": "450 mm、外径 2.6 mm 的多股 PVC 绝缘软电线，一端固定，观察重力弯曲。",
+  "route": "preset",
+  "geometry": {
+    "length_mm": {
+      "value": 450,
+      "unit": "mm",
+      "source": {
+        "kind": "explicit",
+        "detail": "Dimensions explicitly specified by the approved natural-language acceptance task; not measured specimen data"
+      }
+    },
+    "diameter_mm": {
+      "value": 2.6,
+      "unit": "mm",
+      "source": {
+        "kind": "explicit",
+        "detail": "Dimensions explicitly specified by the approved natural-language acceptance task; not measured specimen data"
+      }
+    },
+    "origin_m": {
+      "value": [
+        0,
+        0,
+        0.5
+      ],
+      "unit": "m",
+      "source": {
+        "kind": "estimated",
+        "detail": "Agent engineering starting choices for this task; no material calibration or accuracy certification"
+      }
+    }
+  },
+  "material": {
+    "id": "wire_equivalent",
+    "name": "Whole-wire equivalent CAD material; not pure copper",
+    "color": [
+      0.15,
+      0.18,
+      0.22
+    ],
+    "linear_density_kg_m": {
+      "value": 0.015,
+      "unit": "kg/m",
+      "source": {
+        "kind": "reference",
+        "detail": "LAPP H05V-K 1mm2 nominal line mass15kg/km, OD2.4..2.8mm; selected as a similar construction starting value",
+        "citation": "https://products.lappgroup.com/online-catalogue/power-and-control-cables/control-cabinet-single-cores/various-applications/h05v-k.html",
+        "conditions": "Assumes a similar fine-stranded PVC insulated single core; no assertion that an unknown specimen is this SKU or that EI/GJ are catalogued"
+      }
+    }
+  },
+  "physics": {
+    "source": {
+      "kind": "estimated",
+      "detail": "Agent engineering starting choices for this task; no material calibration or accuracy certification"
+    },
+    "category": "stranded_wire",
+    "feel": "normal",
+    "quality": "balanced",
+    "properties": {
+      "linear_density": {
+        "value": 0.015,
+        "unit": "kg/m",
+        "source": {
+          "kind": "reference",
+          "detail": "LAPP H05V-K 1mm2 nominal line mass15kg/km, OD2.4..2.8mm; selected as a similar construction starting value",
+          "citation": "https://products.lappgroup.com/online-catalogue/power-and-control-cables/control-cabinet-single-cores/various-applications/h05v-k.html",
+          "conditions": "Assumes a similar fine-stranded PVC insulated single core; no assertion that an unknown specimen is this SKU or that EI/GJ are catalogued"
+        }
+      }
+    },
+    "discretization": {
+      "mode": "auto"
+    },
+    "endpoints": {
+      "start": {
+        "mode": "world_fixed"
+      },
+      "end": {
+        "mode": "free"
+      }
+    }
+  },
+  "decision": {
+    "purpose": "观察 450 mm 多股 PVC 绝缘软电线一端固定时的重力弯曲。",
+    "representation": "rigid_joint_chain",
+    "rationale": "构造和尺寸与 stranded_wire 起点相近；线质量采用相似 LAPP 产品的参考值，EI/GJ 等缺项由预设工程初值补全。N 使用确定性初始选段辅助，不以历史段数作为目标。",
+    "assumptions": [
+      "仅观察重力下的有限弯曲，不研究载流、温度、塑性或断裂。",
+      "一端采用 world_fixed，另一端自由，无额外插头或地面接触。",
+      "CAD 原生材料使用整线等效密度，不将整根复合电线解释为纯铜或均质 PVC。"
+    ],
+    "limitations": [
+      "没有实物 EI/GJ 标定；参考线质量不能替刚度背书。",
+      "初始选段不证明分段收敛或力学精度。"
+    ],
+    "bindings": [
+      {
+        "field": "/cables/object/mechanics/linear_density",
+        "material_id": "wire_equivalent",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      },
+      {
+        "field": "/cables/object/mechanics/bending_rigidity",
+        "material_id": "wire_equivalent",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      },
+      {
+        "field": "/cables/object/discretization/free_segments",
+        "material_id": "wire_equivalent",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      }
+    ]
+  }
+}

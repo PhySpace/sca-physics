@@ -1,0 +1,183 @@
+{
+  "id": "B-spring-wire",
+  "description": "300 mm、直径 1 mm 的直圆弹簧钢丝，一端固定，采用小变形不可伸长圆杆近似。",
+  "route": "circle-rod",
+  "geometry": {
+    "length_mm": {
+      "value": 300,
+      "unit": "mm",
+      "source": {
+        "kind": "explicit",
+        "detail": "Dimensions explicitly specified by the approved natural-language acceptance task; not measured specimen data"
+      }
+    },
+    "diameter_mm": {
+      "value": 1,
+      "unit": "mm",
+      "source": {
+        "kind": "explicit",
+        "detail": "Dimensions explicitly specified by the approved natural-language acceptance task; not measured specimen data"
+      }
+    },
+    "origin_m": {
+      "value": [
+        0,
+        0,
+        0.5
+      ],
+      "unit": "m",
+      "source": {
+        "kind": "estimated",
+        "detail": "Agent engineering starting choices for this task; no material calibration or accuracy certification"
+      }
+    }
+  },
+  "material": {
+    "id": "en10270_sm",
+    "name": "EN10270-1 SM nominal spring steel",
+    "color": [
+      0.55,
+      0.58,
+      0.62
+    ],
+    "density_kg_m3": {
+      "value": 7850,
+      "unit": "kg/m^3",
+      "source": {
+        "kind": "reference",
+        "detail": "SCHERDEL EN10270-1 SM spring wire: E206GPa, G81.5GPa, rho7.85kg/dm3 converted to SI",
+        "citation": "https://federfibel.scherdel.com/English/50_Werkstoffe/D_SM_DIN.htm",
+        "conditions": "Diameter1mm is within the stated0.30..20mm range; nominal manufacturer data for an ideal homogeneous round wire, not a selected or measured batch"
+      }
+    }
+  },
+  "rod_material": {
+    "youngs_modulus_pa": {
+      "value": 206000000000.0,
+      "unit": "Pa",
+      "source": {
+        "kind": "reference",
+        "detail": "SCHERDEL EN10270-1 SM spring wire: E206GPa, G81.5GPa, rho7.85kg/dm3 converted to SI",
+        "citation": "https://federfibel.scherdel.com/English/50_Werkstoffe/D_SM_DIN.htm",
+        "conditions": "Diameter1mm is within the stated0.30..20mm range; nominal manufacturer data for an ideal homogeneous round wire, not a selected or measured batch"
+      }
+    },
+    "shear_modulus_pa": {
+      "value": 81500000000.0,
+      "unit": "Pa",
+      "source": {
+        "kind": "reference",
+        "detail": "SCHERDEL EN10270-1 SM spring wire: E206GPa, G81.5GPa, rho7.85kg/dm3 converted to SI",
+        "citation": "https://federfibel.scherdel.com/English/50_Werkstoffe/D_SM_DIN.htm",
+        "conditions": "Diameter1mm is within the stated0.30..20mm range; nominal manufacturer data for an ideal homogeneous round wire, not a selected or measured batch"
+      }
+    }
+  },
+  "target_segment_length_m": {
+    "value": 0.015,
+    "unit": "m",
+    "source": {
+      "kind": "estimated",
+      "detail": "Agent initial spacing15mm=15 outer diameters for this straight300mm task, giving20 free segments within budget; not a convergence result"
+    }
+  },
+  "physics": {
+    "source": {
+      "kind": "estimated",
+      "detail": "Agent engineering starting choices for this task; no material calibration or accuracy certification"
+    },
+    "geometry": {
+      "coordinate_space": "world",
+      "initial_shape": "planar"
+    },
+    "section": {
+      "shape": "circle"
+    },
+    "discretization": {
+      "frame_policy": "shortest_arc_x"
+    },
+    "mechanics": {
+      "joint_damping": 0,
+      "damping_mode": "per_joint",
+      "rest_state": "straight"
+    },
+    "limits": {
+      "minimum_bend_radius": 0.05,
+      "maximum_bend_angle": 20,
+      "maximum_twist_angle": 90
+    },
+    "body": {
+      "linear_damping": 0,
+      "angular_damping": 0,
+      "solver_position_iterations": 96,
+      "solver_velocity_iterations": 4,
+      "enable_speculative_ccd": true,
+      "apply_to_endpoints": false
+    },
+    "collision": {
+      "enabled": true,
+      "contact_offset": 5e-05,
+      "rest_offset": 0,
+      "self_collision": true,
+      "filter_adjacent": true,
+      "filter_endpoint_links": true,
+      "filter_material_neighbors": true
+    },
+    "contact": {
+      "static_friction": 0.4,
+      "dynamic_friction": 0.3,
+      "restitution": 0
+    },
+    "scene": {
+      "physics_hz": 2400,
+      "gravity_magnitude": 9.81,
+      "solver_type": "TGS",
+      "enable_gpu_dynamics": false,
+      "broadphase_type": "MBP"
+    },
+    "endpoints": {
+      "start": {
+        "mode": "world_fixed"
+      },
+      "end": {
+        "mode": "free"
+      }
+    }
+  },
+  "decision": {
+    "purpose": "验证非预设细长圆杆的 Agent 决定可忠实保存及独立导出。",
+    "representation": "rigid_joint_chain",
+    "rationale": "均质实心弹簧钢丝不套用 PVC 电线预设；依据制造商密度和 E、G，通过 circle_rod 计算 rho*A、E*I、G*J。15 mm 目标段长由 Agent 针对该任务选择，再计算 ceil(L/h) 并显式提交 N。",
+    "assumptions": [
+      "均质实心圆截面，直线自然态，小变形、不可伸长；不模拟屈服或残余应力。",
+      "阻尼取 0 是理想无损假设，不能当作实际钢丝阻尼测量。",
+      "2400 Hz/P96/V4 是本案例保存与导出示范的数值起点，未完成原生精度验证。"
+    ],
+    "limitations": [
+      "分段间距尚未做误差收敛；不是精度保证。",
+      "仅验证软件保存及独立导出，不能据此宣布钢丝行为或材料标定通过。"
+    ],
+    "bindings": [
+      {
+        "field": "/cables/object/mechanics/linear_density",
+        "material_id": "en10270_sm",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      },
+      {
+        "field": "/cables/object/mechanics/bending_rigidity",
+        "material_id": "en10270_sm",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      },
+      {
+        "field": "/cables/object/mechanics/torsional_rigidity",
+        "material_id": "en10270_sm",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      },
+      {
+        "field": "/cables/object/discretization/free_segments",
+        "material_id": "en10270_sm",
+        "basis": "This task material ID is also authored using the public SCA Material API. The linked saved field uses the reference, derived calculation or engineering assumptions recorded in its wrapper and this decision."
+      }
+    ]
+  }
+}
