@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "default_profile": "demo-v1",
+  "notice": "Demonstration defaults, not measured material properties. Every resolved parameter stores its numeric value, unit and source in the product package.",
+  "defaults": {
+    "scene": {"up_axis": "+Z"},
+    "contact": {"static_friction": 0.5, "dynamic_friction": 0.4, "restitution": 0.1},
+    "collision": {
+      "enabled": true,
+      "approximation_dynamic": "convexHull",
+      "approximation_static": "none"
+    },
+    "joint": {"damping": 0.0, "collision_enabled": false},
+    "collision_exclusions": []
+  },
+  "units": {
+    "contact": "1",
+    "collision.enabled": "boolean",
+    "collision.approximation_dynamic": "token",
+    "collision.approximation_static": "token",
+    "joint.damping.revolute": "N*m*s/rad",
+    "joint.damping.prismatic": "N*s/m",
+    "joint.damping.other": "unsupported",
+    "joint.collision_enabled": "boolean",
+    "scene.up_axis": "axis"
+  }
+}

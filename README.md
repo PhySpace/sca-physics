@@ -1,4 +1,27 @@
-# sca-physics
+# sca-physics 0.1.8rc1
 
-Repository initialized for review of the SCA physics add-on.
-Candidate implementation and validation scope will be proposed through a draft pull request.
+An independent SimpleCADAPI2.2.5 add-on for sourced physics in complete product packages. The Agent selects the applicable representation and material assumptions; deterministic code validates, calculates, saves and reopens them. New writes use metadataSchema1.7 and require truthful field, group or declaration sources. Submitted estimates take precedence over preset fillers; unknown descriptions never silently become wire.
+
+Schema1.8 adds optional occurrence-bound revolute/prismatic motion limits, maximum velocity, joint friction, force drives (off/position/velocity), articulation declarations and a minimal sourced revolute-to-prismatic ideal mimic coupling. Native CAD frames and axes remain authoritative. Public `update_config`, `update_package`, and CLI `update` apply sourced partial changes without resetting other saved parameters or reusing an old value's provenance. Configurations with no new fields keep the existing1.7 behavior. See [joint physics and units](docs/joint-physics.zh-CN.md) for SI units, damping composition, compatibility and backend limits.
+
+The public `circle_rod` helper converts sourced circular-rod diameter, density, E and G into replayable lambda/EI/GJ wrappers. Derived records contain a supported rule, fixed formula and sourced input snapshots; serialized records are recalculated on validation. Decision records can bind task/material reasoning to actual saved fields. The reader retains contracts for schemas 1.0–1.6 without source relabeling or resegmentation; actual historical package coverage is limited to the identified 1.0 and 1.1 files below.
+
+`configure-cable` supports two explicit categories and deterministic initial segmentation. Other supported round, planar slender bodies require a complete `set-rigid-chain` declaration and an Agent-chosen count. The model retains its inextensible, straight natural-state and per-joint damping limits; no online model service is required by the plugin. Candidate pairing: sca-physics==0.1.8rc1 with sca-usd-export==0.1.8rc2. The exporter makes its physics integration optional; geometry-only export does not require this add-on.
+
+Historical0.1.6rc1/rc2 mechanics findings remain in the validation notes; software checks and saved formulas do not establish material calibration or universal physical accuracy. Current candidate evidence and migration limits are recorded in [release preparation](docs/release-candidate.zh-CN.md) and the [changelog](CHANGELOG.zh-CN.md).
+
+Read [Chinese usage](README.zh-CN.md), [Agent decisions and sources](docs/agent-decisions.zh-CN.md), [automatic cable workflow](docs/automatic-cables.zh-CN.md), [installation](docs/installation.zh-CN.md) and [explicit chain contract](docs/rigid-joint-chains.md). Source lives in this repository; installed payload/runtime/skill are separate copies. Generated assets and environments stay external.
+
+## Candidate compatibility and upgrading
+
+The verified pair is **sca-physics 0.1.8rc1 + sca-usd-export 0.1.8rc2**, on Windows x86-64, CPython 3.12.15, SCA SDK 2.2.5, OpenUSD (`usd-core`) 26.8 and OCP (`cadquery-ocp`) 7.9.3.1. OpenUSD came from an isolated venv, not Isaac. This is a review candidate, not a published release or a guarantee for other combinations.
+
+Verified historical inputs are the 2026-10-19 physics 0.1.0/schema 1.0 pendulum package (SHA256 `ba39ea3d58fbe8c59ca00153858fd72d6d00f091f71602374461ec6c7f4406ec`) and the 2026-10-20 physics 0.1.3rc1/schema 1.1 mechanical package (`54f37bbfd0576d88a2d7f7a718718fce0fa29cf8e3540601b3e1fcc29caf8893`). Both passed native SDK loading, complete re-encoding/reloading, physics snapshot preservation and USD export/reopening. Exact input identities, producer evidence, old path/in-memory API calls and migration commands are in [candidate compatibility](docs/release-candidate.zh-CN.md#兼容性合同及迁移).
+
+**旧无来源裸参数原样不兼容；按要求补充来源信息后，所测试案例通过。** In particular, the archived boolean `collision_enabled=false` now needs a truthful field/group/root source. The runnable [pendulum input](examples/pendulum/physics-input.json) preserves the value and schema 1.0 and records its actual software-fixture estimate; do not copy that source as evidence for a real product. `reference` sources require nonempty detail, citation and conditions. Missing sources fail explicitly. New unschemed writes use 1.7, or 1.8 for new joint/articulation/coupling fields; legacy templates remain explicitly 1.0/1.1.
+
+Physics requires only SimpleCADAPI directly; hatchling builds wheels, and pytest/jsonschema are test dependencies. Physics does not import the USD add-on. The USD physical path exchanges `metadata.sca_physics` **and directly imports physics validation/geometry modules**, so its optional `physics` extra pins 0.1.8rc1. Isaac/PhysX are external simulation-validation environments. A raw package with no embedded physics can use USD alone, preserving the exporter's existing legacy defaults.
+
+Geometry-only users can upgrade USD alone. Existing physics 0.1.8rc1 users can retain it and update/re-provision USD to 0.1.8rc2. For older physics installations, prepare the matching reader/peer first, check it, then switch authoring to 0.1.8rc1 before writing schema 1.8. Prefer a fresh isolated home. Missing/mismatched physics is rejected rather than silently discarding metadata; unknown schemas are rejected. See [upgrade steps](docs/release-candidate.zh-CN.md#升级与最小复现).
+
+Use a short state/runtime root on Windows: the tested roots are `personal-workspace/results/arp-20261025-162555/s` (standalone USD) and `/p` (paired), with `a` for add-on home, `s` for skills and `runtimes` for venvs. Deep paths failed while installing the SDK's Jedi dependency; no general maximum-length guarantee is made. Two external CAD-FEM checks, Isaac/PhysX behavior, other environments and all historical version combinations remain unverified. Installation/export success does not establish solver behavior or material accuracy.
