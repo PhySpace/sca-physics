@@ -1,5 +1,7 @@
 # sca-physics 0.1.8rc1
 
+Download the **plugin ZIP** and `SHA256SUMS.txt` from the [v0.1.8rc1 Pre-release](https://github.com/wwlloo/sca-physics/releases/tag/v0.1.8rc1). GitHub's automatic **Source code** archives are source snapshots. Follow the [download, hash verification, extraction and SCA installation guide](docs/release-installation.zh-CN.md); SDK2.2.5 installs the extracted directory, not the ZIP. Source remains on `main`. Companion: [USD v0.1.8rc2](https://github.com/PhySpace/sca-usd-export/releases/tag/v0.1.8rc2).
+
 An independent SimpleCADAPI2.2.5 add-on for sourced physics in complete product packages. The Agent selects the applicable representation and material assumptions; deterministic code validates, calculates, saves and reopens them. New writes use metadataSchema1.7 and require truthful field, group or declaration sources. Submitted estimates take precedence over preset fillers; unknown descriptions never silently become wire.
 
 Schema1.8 adds optional occurrence-bound revolute/prismatic motion limits, maximum velocity, joint friction, force drives (off/position/velocity), articulation declarations and a minimal sourced revolute-to-prismatic ideal mimic coupling. Native CAD frames and axes remain authoritative. Public `update_config`, `update_package`, and CLI `update` apply sourced partial changes without resetting other saved parameters or reusing an old value's provenance. Configurations with no new fields keep the existing1.7 behavior. See [joint physics and units](docs/joint-physics.zh-CN.md) for SI units, damping composition, compatibility and backend limits.
@@ -14,7 +16,7 @@ Read [Chinese usage](README.zh-CN.md), [Agent decisions and sources](docs/agent-
 
 ## Candidate compatibility and upgrading
 
-The verified pair is **sca-physics 0.1.8rc1 + sca-usd-export 0.1.8rc2**, on Windows x86-64, CPython 3.12.15, SCA SDK 2.2.5, OpenUSD (`usd-core`) 26.8 and OCP (`cadquery-ocp`) 7.9.3.1. OpenUSD came from an isolated venv, not Isaac. This is a review candidate, not a published release or a guarantee for other combinations.
+The verified pair is **sca-physics 0.1.8rc1 + sca-usd-export 0.1.8rc2**, on Windows x86-64, CPython 3.12.15, SCA SDK 2.2.5, OpenUSD (`usd-core`) 26.8 and OCP (`cadquery-ocp`) 7.9.3.1. OpenUSD came from an isolated venv, not Isaac. This is an rc pre-release candidate, not a stable release or a guarantee for other combinations. The corresponding Release notes record the actual GitHub attachment download/install verification result.
 
 Verified historical inputs are the 2026-10-19 physics 0.1.0/schema 1.0 pendulum package (SHA256 `ba39ea3d58fbe8c59ca00153858fd72d6d00f091f71602374461ec6c7f4406ec`) and the 2026-10-20 physics 0.1.3rc1/schema 1.1 mechanical package (`54f37bbfd0576d88a2d7f7a718718fce0fa29cf8e3540601b3e1fcc29caf8893`). Both passed native SDK loading, complete re-encoding/reloading, physics snapshot preservation and USD export/reopening. Exact input identities, producer evidence, old path/in-memory API calls and migration commands are in [candidate compatibility](docs/release-candidate.zh-CN.md#兼容性合同及迁移).
 

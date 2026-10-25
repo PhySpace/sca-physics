@@ -1,5 +1,7 @@
 # 独立安装与维护
 
+从 GitHub 安装候选版本，先看[Release 下载、校验、解压及完整安装步骤](release-installation.zh-CN.md)。本页补充本地源码维护和独立Python开发环境；不能用pip源码安装替代SCA add-on注册。
+
 Windows x86-64、CPython3.12、SimpleCADAPI2.2.5。仓库根的sca-addon.toml提供name/version/skill/compat/runtime，pyproject提供Python安装。对现有机器应新建独立home/skills-dir/runtime验收，不替换其他Agent的入口。
 
 实际SCA2.2.5 CLI格式如下，所有变量由使用者明确指定，不内置个人路径。以下整组命令必须在同一个PowerShell进程中顺序执行，使用同一个宿主解释器、home、skills-dir和USERPROFILE上下文：

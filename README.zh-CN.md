@@ -1,5 +1,7 @@
 # SCA 物理属性附加插件 0.1.8rc1
 
+从 [v0.1.8rc1 Pre-release](https://github.com/wwlloo/sca-physics/releases/tag/v0.1.8rc1) 下载 **`sca-physics-0.1.8rc1.zip`** 与 **`SHA256SUMS.txt`**；自动 **Source code** 附件是源码快照。按[公开下载与安装步骤](docs/release-installation.zh-CN.md)校验、解压，再用 SCA 安装解压目录，不直接安装ZIP。完整源码继续维护在`main`。配套 [USD v0.1.8rc2](https://github.com/PhySpace/sca-usd-export/releases/tag/v0.1.8rc2)。rc不是稳定版，实际下载验收结果见Release正文。
+
 独立 SCA add-on，在建模和 capture **之后**读取 `.scadpkg`，校验并将下游物理声明保存到根定义 `metadata.sca_physics`。通过 SCA 正式产品包 API 保存、重新读取完整产品包；几何、原生材料、装配连接、历史和已有 scene 必须保持。当前候选配套为 `sca-physics==0.1.8rc1` 与 `sca-usd-export==0.1.8rc2`。纯几何导出不需要安装物理插件；导出包内物理配置时，导出器需要其可选 `physics` 依赖。
 
 本仓库根就是可修改、可安装项目。安装 payload、运行环境和注册后的 skill 是独立副本，修改本仓库不会自动更新它们。
